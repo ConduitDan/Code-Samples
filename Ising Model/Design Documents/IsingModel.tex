@@ -1,0 +1,82 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%   Design Document Template    %%
+%%   For Physics Simulations     %%
+%%      By Danny Hellstein       %%
+%%      danielgoldstein.net      %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[]{scrartcl}
+\usepackage{xcolor}
+\usepackage[]{algorithm2e}
+\usepackage{graphicx}
+\title{Ising Model Design Document}
+\author{Danny Hellstein}
+\begin{document}
+\definecolor{comment}{rgb}{0,.5,0}
+\maketitle
+
+\section{Introduction}
+This simulation is an implementation of the Ising model. This is a model for ferromagnetic material. This code will investigate the phase transition and hysteresis of the Ising model.
+
+\section{Mathematical Model}
+The system consists of spins on a square lattice. Each spin $\sigma$ is points either up or down, represented as a $+1$ or $-1$. 
+
+The Hamiltonian for this system is:
+$$\mathcal{H} = -J\sum_{\langle ij\rangle}\sigma_i\sigma_j - H\sum_i \sigma_i$$
+where $\displaystyle\sum_{\langle ij\rangle}$ denotes a sum over $i$ and its nearest neighbors (up, down, left, right) $j$. The interaction between neighboring spins is set by the interaction strength $J$. We can also apply an external magnetic field $H$.
+
+\section{Computational Model}
+		To simulate this system we will sample states at a temperature T. To generate these states we'll use the Metropolis Hasting algorithm we discussed in class. The procedure for a single Monte Carlo (MC) step is as follows
+\begin{enumerate}
+	\item Chose a random spin $i$.
+	\item Calculate the energy $E_{inital} = \mathcal{H}$
+	\item Flip the spin $\sigma_i = -\sigma_i$
+	\item Calculate the new energy $E_{final} = \mathcal{H}$
+	\item If the energy is now less $E_{inital}<E_{final}$ accept the change.
+	\item If the energy is greater accept it with a probability $exp(-\frac{\Delta E}{k_b T})$.
+	\item Otherwise flip the spin back
+	\item Repeat this process a number of time equal to the number of spins in the system.\\
+	Hint: you only need to calculate the change in energy for flipping a single spin. This should not involve the entire system. Only nearest neighbors.
+	
+\end{enumerate}
+
+
+\section{Initial Conditions}
+The system will be initialized with random initial conditions. Each spin has a $50\%$ chanse of being in the up $+1$, or down $-1$ state.
+
+\section{Boundary Conditions}
+We will employ periodic boundary conditions. Spins at the right wall will have spins at the left wall as their neighbors and vice versa. 
+
+
+\section{Observables}
+We will study the magnetization and the order parameter of the system. 
+The magnetism is $m =\frac{\sum_i \sigma_i}{N}$ where $N$ is the total number of spins. Closely related is the order parameter $\phi = |m|$ that tells us how aligned the spins are.
+
+\section{Experiments}
+This code will run two experiments
+\begin{enumerate}
+\item Calculate $\phi$ as a function of T from on T =$[10,0]$. Taking 100 MC steps at each point to equilibrate, then averaging over 100 MC steps for the measurement. 
+\item Calculate $m$ as a function of H for $T = 5$ and $T = 1$. Take H from 10 to -10 and back again for the same system. Taking 100 MC steps at each point to equilibrate, then averaging over 100 MC steps for the measurement. 
+\end{enumerate}
+
+
+\section{Simulation Interface}
+This simulation will take in a command line argument for system size. It only accepts positive integers.
+
+\pagebreak
+\section{Code Structure}
+Class Diagram
+\begin{center}
+	\includegraphics[width=\linewidth]{"Ising Classes"}
+\end{center}
+\pagebreak
+Object Diagram
+\begin{center}
+	\includegraphics[width=\linewidth]{"Ising Objects"}
+\end{center}
+Runtime Diagram
+\begin{center}
+	\includegraphics[width=\linewidth]{"Ising Runtime"}
+\end{center}
+
+\end{document}

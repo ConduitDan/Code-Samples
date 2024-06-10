@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.baselet.element.old.allinone.SequenceDiagram</type>
+    <coordinates>
+      <x>280</x>
+      <y>230</y>
+      <w>950</w>
+      <h>560</h>
+    </coordinates>
+    <panel_attributes>title: Ising Model
+Ising Experiment~id1|Metroplis~id3|Ising Model~id2| Ising Spin~id4| Observer ~id5
+iframe{:Initalize
+id1-&gt;&gt;id1:id1:Read Parameters
+id1-&gt;&gt;id2:id1,id2:Initalize
+id2-&gt;&gt;id4:id2,id4: Create Spins
+iframe}
+iframe{:State Update
+id1-&gt;&gt;id3:id1,id3: Take Montecarlo Step
+id3-&gt;&gt;id2:id3,id2: Get Element
+id3-&gt;&gt;id4:id3,id4: Get Energy
+id3-&gt;&gt;id3:id3: Calculate Acceptence
+id3-&gt;&gt;id4:id3,id4: Flip Spin
+id3-&gt;&gt;id1:id3,id1: New State Prepaired
+id1-&gt;&gt;id5:id1,id5: Take Measurement
+id5-&gt;&gt;id2:id5,id2: Get State Info
+iframe}
+
+
+
+
+
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

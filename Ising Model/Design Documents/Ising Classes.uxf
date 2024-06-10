@@ -1,0 +1,116 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>470</x><y>110</y><w>290</w><h>370</h></coordinates><panel_attributes>Ising Model
+Manages Spins, Calculates Energy.
+--
+ std::vector&lt;IsingSpin&gt; _spins;
+
+ double _J;
+ double _H;
+ int _L;
+ 
+ std::mt19937 _gen;
+ std::uniform_int_distribution&lt;&gt; distr;
+--
+IsingModel(int L,double H,double J);
+
+IsingSpin&amp; get_random_spin();
+IsingSpin&amp; get_spin(int i);
+
+double get_energy(IsingSpin&amp; spin);
+
+
+void set_seed(double seed)
+void set_H(double H)
+int get_system_size()
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>810</x><y>110</y><w>350</w><h>180</h></coordinates><panel_attributes>IsingSpin
+Points up or down, can flip, knows its index.
+--
+ bool _state = false;
+ int _index;
+--
+ int get_state();
+ int get_index();
+
+ void flip();
+ void set_index(int i);
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>260</y><w>380</w><h>230</h></coordinates><panel_attributes>MetropolisHasting
+Runs a Metropolis Hastings Algorithm on a model.
+--
+    double _T;
+    std::mt19937 _gen;
+    std::uniform_real_distribution&lt;&gt; _distr;
+    
+--
+    MetropolisHasting(double T);
+    void run (int MCSteps,IsingModel* model);
+    void set_T(double T);
+    bool accept(double deltaE);
+    void set_seed(double seed);</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>200</x><y>690</y><w>260</w><h>70</h></coordinates><panel_attributes>MagnetismIsingObserver
+Measures Magnetism
+--
+ virtual void takeMeasurement(...);
+
+group=1</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>200</x><y>500</y><w>650</w><h>140</h></coordinates><panel_attributes>IsingObserver
+Takes Measurments of an Ising Model
+--
+ std::fstream outFile;
+ int _numMeasurements = 100;
+--
+ IsingObserver(std::string fileName);
+ ~IsingObserver();
+ virtual void takeMeasurement(IsingModel *subject,MetropolisHasting* MC, double value);
+
+group=1</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>550</x><y>700</y><w>300</w><h>70</h></coordinates><panel_attributes>MovieIsingObserver
+Measures the entire state of the model
+--
+ virtual void takeMeasurement(...);
+
+group=1</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>110</x><y>810</y><w>420</w><h>160</h></coordinates><panel_attributes>    double m = 0;
+    for (int j = 0; j&lt;_numMeasurements; j++){
+        for (int i = 0; i&lt;subject-&gt;get_system_size(); i++){
+            m+=subject-&gt;get_spin(i).get_state();
+        }
+        MCAlgorithm-&gt;run(1,subject);
+    }
+    m=m/subject-&gt;get_system_size()/_numMeasurements;
+    outFile&lt;&lt;value&lt;&lt;","&lt;&lt;m&lt;&lt;std::endl;
+group=1</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>560</x><y>810</y><w>390</w><h>140</h></coordinates><panel_attributes>    outFile&lt;&lt;value&lt;&lt;',';
+
+    for (int i = 0; i&lt;subject-&gt;get_system_size(); i++){
+        outFile&lt;&lt;subject-&gt;get_spin(i).get_state()&lt;&lt;',';
+    }
+    
+    outFile&lt;&lt;std::endl;
+
+group=1</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>110</y><w>450</w><h>140</h></coordinates><panel_attributes>IsingExperiment
+Runs the experiment, sets IC, runs for a number of MC steps,
+Tell observers to take measurements
+--
+    static void phase_diagram(int L);
+    static void hysteresis(int L);
+    static void movie(int L);
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>340</x><y>630</y><w>220</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-
+group=1</panel_attributes><additional_attributes>10;60;10;40;200;40;200;10</additional_attributes></element><element><id>Relation</id><coordinates><x>70</x><y>730</y><w>150</w><h>180</h></coordinates><panel_attributes>lt=&lt;-
+
+group=1</panel_attributes><additional_attributes>40;160;10;160;10;10;130;10</additional_attributes></element><element><id>Relation</id><coordinates><x>800</x><y>730</y><w>230</w><h>150</h></coordinates><panel_attributes>lt=&lt;-
+
+group=1</panel_attributes><additional_attributes>150;130;210;130;210;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>530</x><y>630</y><w>200</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-
+group=1</panel_attributes><additional_attributes>180;70;180;40;10;40;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>990</x><y>300</y><w>350</w><h>180</h></coordinates><panel_attributes>Grid&lt;Item&gt;
+    A grid spatially organizes the items it holds in a lattice.
+--
+    int _Nx; // size in the x direction
+    int _Ny; // size in the y direction
+    std::unique_ptr&lt;Item[]&gt; _values; //smart pointer to the items on the lattice
+--
+Grid(int Nx, int Ny) 
+virtual GridNeighborIterator&lt;Item&gt;* get_neighbor_iterator()
+Item&amp; operator[](int index)    // get the element at index
+virtual std::array&lt;double,2&gt; get_coord(index)    // get the x,y posiition at index</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>910</x><y>510</y><w>260</w><h>80</h></coordinates><panel_attributes>SquareGrid&lt;Item&gt;
+A square Grid
+--
+ std::array&lt;double,2&gt; get_coord(int index)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1190</x><y>510</y><w>260</w><h>80</h></coordinates><panel_attributes>TriangularGrid&lt;Item&gt;
+A Triangular Grid
+--
+ std::array&lt;double,2&gt; get_coord(int index)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1050</x><y>470</y><w>140</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;40;10;20;120;20;120;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1160</x><y>470</y><w>190</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>170;40;170;20;10;20;10;10</additional_attributes></element></diagram>
