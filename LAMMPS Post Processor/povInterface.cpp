@@ -35,7 +35,6 @@ std::string POVRayDrawer::pov_vector(double *v) {
     return out;
 }
 
-// std::string POVRayDrawer::color() { return std::string("<0.5, 0.5, 0.5>"); }
 
 void POVRayDrawer::write_header() {
 

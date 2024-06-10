@@ -28,23 +28,7 @@ int main(int argc , char**argv) {
     if (argc>=3){
         std::string command = argv[2];
 
-        if (command == "flipTest") {
-        
-            LPP.read_data(0,0,1);
-            if (LPP.check_flips()) {
-                std::cout<< "Test Passed"<<std::endl;
-            } else std::cout <<"FAILED"<<std::endl;
-            return 1;
-        } else if (command == "newShell") {
-            std::tuple<int,int,int> TSData = findTS(projectFolder);
-            int initTS = std::get<0>(TSData);
-            int finalTS = std::get<1>(TSData);
-            int incrementTS = std::get<2>(TSData);
-            std::cout<<"Found First Dump at "<<initTS<<" last dump at "<<finalTS<<" with increments of "<<incrementTS<<std::endl;
-            LPP.read_data(finalTS,finalTS,incrementTS);
-            LPP.write_frame_to_input();
-
-        } else if (command == "image") {
+         if (command == "image") {
 
             TSData=std::make_tuple(std::get<1>(TSData),std::get<1>(TSData),std::get<2>(TSData));
             obvs.push_back(new MovieObserver(projectFolder));
